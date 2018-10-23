@@ -1,0 +1,71 @@
+# Secret Santa Sorter
+# Input: Number of guests as a non-zero positive integer, names of guests as strings
+# Ouput: Name pair of gifter/recipient
+
+# Import relevant built-in functions
+from random import shuffle
+import pprint
+
+
+# Let's define our custom functions
+def get_number():
+    """A simple function to request the number of guests attending and provide an option to restart in case of error."""
+
+    number_confirm = 0
+    while number_confirm < 1:  # Confirmation loop
+        number_guest = int(input('Howdy! Please enter the number of guests: '))  # Changes type from str to int
+        while number_guest <= 0:
+            print("No guests? That's a bit sad. Let's try again.")  # Checks that number_guest is a non-zero integer
+            number_guest = int(input('Howdy! Please enter the number of guests: '))
+        else:
+            print('You have', number_guest, 'guest(s) attending. Is this correct?')
+            answer = input('y/n: ')
+            if answer == 'y':
+                number_confirm = 1
+            elif answer == 'n':
+                print('No worries, we will just try again.')
+            else:
+                print('Please answer with y or n only.')
+    return number_guest
+
+def get_names(num1):
+    """A function to create the lift of available gift givers, confirm that all guests have been added, and provide an option to restart in case of error."""
+
+    number_guest = num1
+    giver_list =[]
+    for guest in range(number_guest):
+        add = input('Please enter a name: ')
+        if add not in giver_list:
+            giver_list.append(add)
+        else:
+            print('You have already added this name!')
+    number_confirm = 0
+    while number_confirm < 1:  # Confirmation loop
+        print('The guests are:', giver_list, '. Is this correct?')
+        answer = input('y/n: ')
+        if answer == 'y':
+            number_confirm = 1
+        elif answer == 'n':
+            giver_list.clear()
+            print('No worries, we will just try again.')
+        else:
+            print('Please answer with y or n only.')
+    return giver_list
+
+# Get and confirm inputs from user to populate the gift giver list
+temp = get_number()
+giver_list = get_names(temp)
+
+# Create recipient list4
+shuffle(giver_list)  # Randomize the gift giver list
+recipient_list = giver_list[1:]  # Copies giver_list but skips the first entry
+recipient_list.extend(giver_list[0:1])  # Adds the first entry of giver_list to the end
+
+# Merge lists into dictionary
+secret_santa = dict(zip(giver_list, recipient_list))  # giver_list provides keys, recipient_list provides values
+
+# Print Secret Santa results
+
+print('Great! Here is your Secret Santa list:')
+pprint.pprint(secret_santa)
+print('Merry Christmas!')
